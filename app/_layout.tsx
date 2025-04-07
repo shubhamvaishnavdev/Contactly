@@ -14,6 +14,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { ActivityIndicator } from "react-native";
 import { useInitializeDb } from "@/hooks/useInitializeDb";
 
+
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +24,6 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-
   // Drizle connect with sql lite
   const { db,ready } = useInitializeDb();
 

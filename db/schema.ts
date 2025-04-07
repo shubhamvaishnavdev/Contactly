@@ -10,7 +10,7 @@
     
     // Contacts Table
     export const contacts = sqliteTable('contacts', {
-        id: integer('id').primaryKey({ autoIncrement: true }),
+        id: text('id').primaryKey(),
         name: text('name').notNull(),
         phone: text('phone').notNull(),
     });
@@ -18,7 +18,7 @@
     // Custom Fields Table
     export const customFields = sqliteTable('custom_fields', {
         id: integer('id').primaryKey({ autoIncrement: true }),
-        contactId: integer('contact_id').notNull(), // FK to contacts
+        contactId: text('contact_id').notNull(), // FK to contacts
         fieldName: text('field_name').notNull(),
         fieldType: text('field_type').notNull(),
         fieldValue: text('field_value'), // used for text, number, date, lat, lng

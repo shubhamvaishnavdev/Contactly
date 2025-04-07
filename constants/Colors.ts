@@ -11,6 +11,8 @@ export const Colors = {
     icon: "#687076",
     tabIconActive: "#000",
     tabIconInActive: "#9BA1A6",
+    primaryBtnBackground: "#000",
+    primaryBtnText: "#fff",
   },
   dark: {
     text: "#ECEDEE",
@@ -19,5 +21,7 @@ export const Colors = {
     icon: "#9BA1A6",
     tabIconActive: "#fff",
     tabIconInActive: "#9BA1A6",
+    primaryBtnBackground: "#fff",
+    primaryBtnText: "#000",
   },
 };

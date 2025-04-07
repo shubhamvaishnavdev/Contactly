@@ -33,7 +33,13 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow Contactly to access your contacts."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

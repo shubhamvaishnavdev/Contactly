@@ -4,20 +4,21 @@ import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import migrations from "../drizzle/migrations";
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 
 let dbInstance: ReturnType<typeof drizzle> | null = null;
 
 export const useInitializeDb = () => {
   const [ready, setReady] = useState(false);
 
+  const expoDb = SQLite.openDatabaseSync("contactly.db");
+  useDrizzleStudio(expoDb);
   if (!dbInstance) {
-    const expoDb = SQLite.openDatabaseSync("contactly.db");
     dbInstance = drizzle(expoDb);
   }
-const migrate = useMigrations(dbInstance!, migrations);
+  const migrate = useMigrations(dbInstance!, migrations);
   useEffect(() => {
     const init = async () => {
-
       try {
         const expoDb = SQLite.openDatabaseSync("contactly.db");
         await expoDb.execAsync("PRAGMA foreign_keys = ON;");
@@ -25,7 +26,7 @@ const migrate = useMigrations(dbInstance!, migrations);
         const alreadyMigrated = await AsyncStorage.getItem("@db_migrated_v1");
 
         if (!alreadyMigrated) {
-          const { success, error } = migrate 
+          const { success, error } = migrate;
 
           if (error) {
             console.error("Migration Error:", error);

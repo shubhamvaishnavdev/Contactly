@@ -6,6 +6,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Platform } from "react-native";
+import { BlurView } from "expo-blur";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -19,7 +21,7 @@ export default function TabLayout() {
           backgroundColor: Colors[colorScheme ?? "light"].background,
           borderTopColor: "transparent", // optional
         },
-        
+
         headerShown: false,
       }}
     >

@@ -13,8 +13,7 @@ import "../global.css";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ActivityIndicator } from "react-native";
 import { useInitializeDb } from "@/hooks/useInitializeDb";
-
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -25,7 +24,7 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
   // Drizle connect with sql lite
-  const { db,ready } = useInitializeDb();
+  const { db, ready } = useInitializeDb();
 
   useEffect(() => {
     if (loaded && ready) {
@@ -40,13 +39,14 @@ export default function RootLayout() {
   return (
     <Suspense fallback={<ActivityIndicator size={"large"} />}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
+        <SafeAreaProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </SafeAreaProvider>
       </ThemeProvider>
     </Suspense>
-
   );
 }

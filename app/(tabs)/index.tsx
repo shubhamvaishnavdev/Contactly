@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MainHomeComponent from "@/components/home/MainHomeComponent";
 
 export default function HomeScreen() {
   const [contactList, setContactList] = useState<Contact[]>([]);
@@ -39,21 +40,13 @@ export default function HomeScreen() {
     }
   }
 
-  const renderItem = ({ item }: { item: Contact }) => (
-    <ContactCard contact={item} />
-  );
+  
 
   return (
     <SafeAreaView edges={["top", "bottom", "left", "right"]}>
       <View className="h-full w-full flex justify-center items-center bg-background dark:bg-dark-background p-4 pb-0 rounded-xl">
         {contactList.length > 0 ? (
-          <View className=" h-full w-full">
-            <FlashList
-              data={contactList.length > 0 ? contactList : []}
-              renderItem={renderItem}
-              estimatedItemSize={500} // Must be close to real item height
-            />
-          </View>
+          <MainHomeComponent contactList={contactList}/>
         ) : (
           <TouchableOpacity
             className="bg-primaryBtnBackground dark:bg-dark-primaryBtnBackground p-3 rounded-3xl "

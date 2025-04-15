@@ -13,6 +13,7 @@ export const Colors = {
     tabIconInActive: "#9BA1A6",
     primaryBtnBackground: "#000",
     primaryBtnText: "#fff",
+    placeholderText: "#fff",
   },
   dark: {
     text: "#ECEDEE",
@@ -24,5 +25,6 @@ export const Colors = {
     tabIconInActive: "#9BA1A6",
     primaryBtnBackground: "#fff",
     primaryBtnText: "#000",
+    placeholderText: "#C5C5C5",
   },
 };

@@ -1,5 +1,21 @@
 export interface Contact {
-    id: string;
-    name: string;
-    phone: string;
-  };
+  id: string;
+  name: string;
+  phone: string;
+}
+
+export type FieldType = "text" | "number" | "date" | "image" | "map" | "link";
+
+export interface CustomContactDetails {
+  id: number;
+  contactId: string;
+  fieldName: string;
+  fieldType: FieldType;
+  fieldValue?: string | null; // for text, number, date, lat, lng, image URL
+  fieldObject?: string | null; // can be used for complex objects (stored as JSON string)
+}
+
+export interface FullContact {
+  contact: Contact;
+  customFields: CustomContactDetails[];
+}

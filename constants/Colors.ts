@@ -6,7 +6,9 @@
 export const Colors = {
   light: {
     text: "#11181C",
+    secondaryText: "#454545",
     background: "#fff",
+    cardBackground: "#000000",
     tint: "#0a7ea4",
     icon: "#687076",
     tabIconActive: "#000",
@@ -17,8 +19,9 @@ export const Colors = {
   },
   dark: {
     text: "#ECEDEE",
-    secondaryText:"#cccccc",
-    background: "#151718",
+    secondaryText:"#c7c5c5",
+    background: "#000000",
+    cardBackground: "#1c1c1c",
     tint: "#fff",
     icon: "#9BA1A6",
     tabIconActive: "#fff",

@@ -9,7 +9,7 @@ export default function ContactLayout() {
       <Stack>
         <Stack.Screen
           name="view/[contact_id]/index"
-          options={{ headerShown: false }}
+          options={{ headerShown: true, title: "Contact Details" }}
         />
       </Stack>
     </SafeAreaProvider>

@@ -5,6 +5,8 @@ import {
   Image,
   Pressable,
   Linking,
+  Button,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
@@ -19,6 +21,9 @@ import {
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { Colors } from "@/constants/Colors";
 import Entypo from "@expo/vector-icons/Entypo";
+import { json } from "drizzle-orm/gel-core";
+import { deleteCustomFieldFromDb } from "@/controllers/delete.controller";
+import CustomDeleteModal from "../common/deleteConfirmationModal";
 
 const ShowContactDetails = ({
   basicDetails,
@@ -35,6 +40,12 @@ const ShowContactDetails = ({
     null
   );
 
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [deleteField, setDeleteField] = useState({
+    contactId: 0,
+    customFieldId: 0,
+  });
+
   const openLink = async (url: string) => {
     const supported = await Linking.canOpenURL(url);
     if (supported) {
@@ -45,6 +56,20 @@ const ShowContactDetails = ({
   const imageField = customDetails.find(
     (f: CustomContactDetails) => f.fieldType === "image"
   );
+
+  const handleDelete = async ({
+    customFieldId,
+    contactId,
+  }: {
+    customFieldId: number;
+    contactId: number;
+  }) => {
+    await deleteCustomFieldFromDb({
+      customFieldId,
+      contactId,
+    });
+    await loadData();
+  };
 
   return (
     <ScrollView
@@ -141,7 +166,7 @@ const ShowContactDetails = ({
                         padding: 10,
                         borderRadius: 10,
                         overflow: "hidden", // optional, but good
-                        borderWidth:1,
+                        borderWidth: 1,
                         borderColor: Colors[colorScheme ?? "light"].borderColor,
                       },
                     }}
@@ -153,7 +178,15 @@ const ShowContactDetails = ({
                         Edit
                       </Text>
                     </MenuOption>
-                    <MenuOption onSelect={() => alert(`Delete`)}>
+                    <MenuOption
+                      onSelect={() => {
+                        setDeleteField({
+                          contactId: Number(field.contactId),
+                          customFieldId: Number(field.id),
+                        });
+                        setIsDeleteModalVisible(true);
+                      }}
+                    >
                       <Text style={{ color: "red" }}>Delete</Text>
                     </MenuOption>
                   </MenuOptions>
@@ -174,6 +207,14 @@ const ShowContactDetails = ({
           initialData={editingField}
         />
       )}
+      <CustomDeleteModal
+        visible={isDeleteModalVisible}
+        onClose={() => setIsDeleteModalVisible(false)}
+        onConfirm={() => {
+          handleDelete(deleteField);
+          setIsDeleteModalVisible(false);
+        }}
+      />
     </ScrollView>
   );
 };

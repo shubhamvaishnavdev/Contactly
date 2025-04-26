@@ -6,17 +6,27 @@ import {
   Pressable,
   Linking,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Contact, CustomContactDetails } from "@/types/contact.types";
+import EditFieldModal from "../edit-contact/EditFieldModal";
+import { updateCustomContactDetails } from "@/controllers/updateCustomFields.controller";
 
 const ShowContactDetails = ({
   basicDetails,
   customDetails,
+  loadData,
 }: {
-  basicDetails: Contact;
-  customDetails: CustomContactDetails[];
+  basicDetails: Contact | null;
+  customDetails: CustomContactDetails[] | [];
+  loadData: any;
 }) => {
+  const [editingField, setEditingField] = useState<null | CustomContactDetails>(
+    null
+  );
+
+  
+
   const openLink = async (url: string) => {
     const supported = await Linking.canOpenURL(url);
     if (supported) {
@@ -29,9 +39,9 @@ const ShowContactDetails = ({
   );
 
   return (
-    <ScrollView 
-    className="h-auto w-full p-4 bg-background dark:bg-dark-background min-h-screen"
-    contentContainerStyle={{ paddingBottom: 80 }}
+    <ScrollView
+      className="h-auto w-full p-4 bg-background dark:bg-dark-background min-h-screen"
+      contentContainerStyle={{ paddingBottom: 80 }}
     >
       {/* Profile Picture */}
       <View className="items-center mb-4">
@@ -51,10 +61,10 @@ const ShowContactDetails = ({
       {/* Basic Info */}
       <View className="items-center mb-4">
         <Text className="text-xl font-bold text-text dark:text-dark-text">
-          {basicDetails.name}
+          {basicDetails?.name}
         </Text>
         <Text className="text-text dark:text-dark-text">
-          {basicDetails.phone}
+          {basicDetails?.phone}
         </Text>
       </View>
 
@@ -103,14 +113,29 @@ const ShowContactDetails = ({
 
           return (
             <View key={field.id} className=" pb-6">
-              <Text className="text-sm pl-2 text-secondaryText dark:text-dark-secondaryText">
-                {field.fieldName}
-              </Text>
-              <View className="mt-1 p-4 dark:bg-dark-cardBackground rounded-2xl">{content}</View>
+              <View className="flex-row gap-2">
+                <Text className="text-sm pl-2 text-secondaryText dark:text-dark-secondaryText">
+                  {field.fieldName}
+                </Text>
+                <Pressable onPress={() => setEditingField(field)}>
+                  <AntDesign name="edit" size={16} color="gray" />
+                </Pressable>
+              </View>
+              <View className="mt-1 p-4 dark:bg-dark-cardBackground rounded-2xl">
+                {content}
+              </View>
             </View>
           );
         })}
       </View>
+      {editingField && (
+        <EditFieldModal
+          visible={true}
+          onClose={() => setEditingField(null)}
+          loadData={loadData}
+          initialData={editingField}
+        />
+      )}
     </ScrollView>
   );
 };

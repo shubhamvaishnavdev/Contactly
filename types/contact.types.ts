@@ -19,3 +19,11 @@ export interface FullContact {
   contact: Contact;
   customFields: CustomContactDetails[];
 }
+
+export interface EditContactData {
+    id: string;
+    fieldName: string;
+    fieldType: string;
+    fieldValue: string;
+  
+}

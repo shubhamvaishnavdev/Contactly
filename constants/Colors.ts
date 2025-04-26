@@ -16,10 +16,11 @@ export const Colors = {
     primaryBtnBackground: "#000",
     primaryBtnText: "#fff",
     placeholderText: "#fff",
+    borderColor: "#11181C",
   },
   dark: {
     text: "#ECEDEE",
-    secondaryText:"#c7c5c5",
+    secondaryText: "#c7c5c5",
     background: "#000000",
     cardBackground: "#1c1c1c",
     tint: "#fff",
@@ -29,5 +30,6 @@ export const Colors = {
     primaryBtnBackground: "#fff",
     primaryBtnText: "#000",
     placeholderText: "#C5C5C5",
+    borderColor: "#ECEDEE",
   },
 };

@@ -10,7 +10,15 @@ import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { Contact, CustomContactDetails } from "@/types/contact.types";
 import EditFieldModal from "../edit-contact/EditFieldModal";
-import { updateCustomContactDetails } from "@/controllers/updateCustomFields.controller";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
+import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { Colors } from "@/constants/Colors";
+import Entypo from "@expo/vector-icons/Entypo";
 
 const ShowContactDetails = ({
   basicDetails,
@@ -21,11 +29,11 @@ const ShowContactDetails = ({
   customDetails: CustomContactDetails[] | [];
   loadData: any;
 }) => {
+  const colorScheme = useColorScheme();
+
   const [editingField, setEditingField] = useState<null | CustomContactDetails>(
     null
   );
-
-  
 
   const openLink = async (url: string) => {
     const supported = await Linking.canOpenURL(url);
@@ -113,13 +121,43 @@ const ShowContactDetails = ({
 
           return (
             <View key={field.id} className=" pb-6">
-              <View className="flex-row gap-2">
+              <View className="flex-row justify-between pr-4">
                 <Text className="text-sm pl-2 text-secondaryText dark:text-dark-secondaryText">
                   {field.fieldName}
                 </Text>
-                <Pressable onPress={() => setEditingField(field)}>
-                  <AntDesign name="edit" size={16} color="gray" />
-                </Pressable>
+                <Menu>
+                  <MenuTrigger>
+                    <Entypo
+                      name="dots-three-vertical"
+                      size={16}
+                      color={Colors[colorScheme ?? "light"].text}
+                    />
+                  </MenuTrigger>
+                  <MenuOptions
+                    customStyles={{
+                      optionsContainer: {
+                        backgroundColor:
+                          Colors[colorScheme ?? "light"].cardBackground,
+                        padding: 10,
+                        borderRadius: 10,
+                        overflow: "hidden", // optional, but good
+                        borderWidth:1,
+                        borderColor: Colors[colorScheme ?? "light"].borderColor,
+                      },
+                    }}
+                  >
+                    <MenuOption onSelect={() => setEditingField(field)}>
+                      <Text
+                        style={{ color: Colors[colorScheme ?? "light"].text }}
+                      >
+                        Edit
+                      </Text>
+                    </MenuOption>
+                    <MenuOption onSelect={() => alert(`Delete`)}>
+                      <Text style={{ color: "red" }}>Delete</Text>
+                    </MenuOption>
+                  </MenuOptions>
+                </Menu>
               </View>
               <View className="mt-1 p-4 dark:bg-dark-cardBackground rounded-2xl">
                 {content}

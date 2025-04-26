@@ -13,7 +13,8 @@ import "../global.css";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ActivityIndicator } from "react-native";
 import { useInitializeDb } from "@/hooks/useInitializeDb";
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { MenuProvider } from "react-native-popup-menu";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,12 +41,14 @@ export default function RootLayout() {
     <Suspense fallback={<ActivityIndicator size={"large"} />}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <SafeAreaProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="(contact)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+          <MenuProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="(contact)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
           <StatusBar style="auto" />
+          </MenuProvider>
         </SafeAreaProvider>
       </ThemeProvider>
     </Suspense>

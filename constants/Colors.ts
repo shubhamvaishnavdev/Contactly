@@ -30,6 +30,6 @@ export const Colors = {
     primaryBtnBackground: "#fff",
     primaryBtnText: "#000",
     placeholderText: "#C5C5C5",
-    borderColor: "#ECEDEE",
+    borderColor: "#babab8",
   },
 };

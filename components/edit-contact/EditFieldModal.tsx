@@ -7,7 +7,6 @@ import {
   Button,
   Pressable,
   Platform,
-  useColorScheme,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,6 +14,7 @@ import { CustomContactDetails } from "@/types/contact.types";
 import { Colors } from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { updateCustomContactDetails } from "@/controllers/updateCustomFields.controller";
+import { useColorScheme } from "@/hooks/useColorScheme.web";
 
 type Props = {
   visible: boolean;

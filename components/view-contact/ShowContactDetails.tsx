@@ -24,6 +24,8 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { json } from "drizzle-orm/gel-core";
 import { deleteCustomFieldFromDb } from "@/controllers/delete.controller";
 import CustomDeleteModal from "../common/deleteConfirmationModal";
+import { requestMediaLibraryPermission } from "@/util/requestPermissions";
+import { openGallery } from "@/util/openGallery ";
 
 const ShowContactDetails = ({
   basicDetails,
@@ -71,13 +73,21 @@ const ShowContactDetails = ({
     await loadData();
   };
 
+  const handleProfilePicClick = async () => {
+    const result = await openGallery();
+    if (result) {
+      const { imageName, imagePath } = result;
+      console.log("Image saved:", imageName, imagePath);
+    }
+  };
+
   return (
     <ScrollView
       className="h-auto w-full p-4 bg-background dark:bg-dark-background min-h-screen"
       contentContainerStyle={{ paddingBottom: 80 }}
     >
       {/* Profile Picture */}
-      <View className="items-center mb-4">
+      <Pressable className="items-center mb-4" onPress={handleProfilePicClick}>
         {imageField?.fieldValue ? (
           <Image
             source={{ uri: imageField.fieldValue }}
@@ -89,7 +99,7 @@ const ShowContactDetails = ({
             <AntDesign name="user" size={64} color="gray" />
           </View>
         )}
-      </View>
+      </Pressable>
 
       {/* Basic Info */}
       <View className="items-center mb-4">

@@ -1,11 +1,9 @@
-import ContactCard from "@/components/home/contactCard";
 import { fetchContactsFromDb } from "@/controllers/fetchContact.controller";
 import { saveContactsToDb } from "@/controllers/insertContact.controller";
 import { Contact } from "@/types/contact.types";
 import { getDeviceContacts } from "@/util/contacts";
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { FlashList } from "@shopify/flash-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MainHomeComponent from "@/components/home/MainHomeComponent";
 

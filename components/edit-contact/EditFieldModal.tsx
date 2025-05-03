@@ -15,6 +15,7 @@ import { Colors } from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { updateCustomContactDetails } from "@/controllers/updateCustomFields.controller";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
+import DropDown from "../common/DropDown";
 
 type Props = {
   visible: boolean;
@@ -25,15 +26,32 @@ type Props = {
 
 const EditFieldModal = ({ visible, onClose, loadData, initialData }: Props) => {
   const colorScheme = useColorScheme();
-  const [fieldType, setFieldType] = useState(initialData.fieldType);
+  const [fieldType, setFieldType] = useState<string>(initialData.fieldType);
   const [fieldName, setFieldName] = useState(initialData.fieldName);
   const [fieldValue, setFieldValue] = useState(initialData.fieldValue);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  // Utility: Format Date to dd-mm-yyyy
+  const formatDateToDDMMYYYY = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // Utility: Convert dd-mm-yyyy to Date object
+  const parseDateFromDDMMYYYY = (dateString: string) => {
+    if (!dateString || !dateString.includes("/")) return new Date();
+    const [day, month, year] = dateString.split("/");
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  };
+
+  // Date picker handler
   const handleDateChange = (event: any, selectedDate?: Date) => {
     if (Platform.OS === "android") setShowDatePicker(false);
     if (selectedDate) {
-      setFieldValue(selectedDate.toISOString());
+      const formatted = formatDateToDDMMYYYY(selectedDate);
+      setFieldValue(formatted);
     }
   };
 
@@ -66,23 +84,10 @@ const EditFieldModal = ({ visible, onClose, loadData, initialData }: Props) => {
             placeholder="Field Name"
             value={fieldName}
             onChangeText={setFieldName}
+            placeholderTextColor={Colors[colorScheme ?? "light"].text}
           />
 
-          <View className="border border-borderColor dark:border-dark-borderColor rounded text-text dark:text-dark-text">
-            <Picker
-              selectedValue={fieldType}
-              onValueChange={(itemValue) => setFieldType(itemValue)}
-              className="text-text dark:text-dark-text"
-              style={{ color: Colors[colorScheme ?? "light"].text }}
-            >
-              <Picker.Item label="Text" value="text" />
-              <Picker.Item label="Number" value="number" />
-              <Picker.Item label="Link" value="link" />
-              <Picker.Item label="Image" value="image" />
-              <Picker.Item label="Map" value="map" />
-              <Picker.Item label="Date" value="date" />
-            </Picker>
-          </View>
+          <DropDown value={fieldType} setValue={setFieldType} />
 
           {fieldType === "date" ? (
             <>
@@ -91,16 +96,14 @@ const EditFieldModal = ({ visible, onClose, loadData, initialData }: Props) => {
                 className="border p-2 rounded  border-borderColor dark:border-dark-borderColor  text-text dark:text-dark-text"
               >
                 <Text className="p-2 text-text dark:text-dark-text">
-                  {fieldValue
-                    ? new Date(fieldValue).toDateString()
-                    : "Pick a date"}
+                  {fieldValue ? fieldValue : "Pick a date"}
                 </Text>
               </Pressable>
 
               {/* 👇 This part was missing in your code */}
               {showDatePicker && (
                 <DateTimePicker
-                  value={fieldValue ? new Date(fieldValue) : new Date()}
+                  value={parseDateFromDDMMYYYY(fieldValue) ?? ""}
                   mode="date"
                   display="default"
                   onChange={handleDateChange}
@@ -113,6 +116,7 @@ const EditFieldModal = ({ visible, onClose, loadData, initialData }: Props) => {
               placeholder="Field Value"
               value={fieldValue || undefined}
               onChangeText={setFieldValue}
+              placeholderTextColor={Colors[colorScheme ?? "light"].text}
             />
           )}
 

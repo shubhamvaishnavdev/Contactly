@@ -9,8 +9,10 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { CustomContactDetails } from "@/types/contact.types";
 import { saveCustomFieldsForContact } from "@/controllers/insertCustomFields.controller";
+import DropDown from "../common/DropDown";
+import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { Colors } from "@/constants/Colors";
 
 interface InputModalProps {
   visible: boolean;
@@ -25,6 +27,8 @@ const InputModal: React.FC<InputModalProps> = ({
   contact_id,
   loadData,
 }) => {
+  const colorScheme = useColorScheme();
+
   const [fieldName, setFieldName] = useState<string>("");
   const [fieldType, setFieldType] = useState<string>("text");
   const [fieldValue, setFieldValue] = useState<string>("");
@@ -73,35 +77,29 @@ const InputModal: React.FC<InputModalProps> = ({
       onRequestClose={onClose}
     >
       <View className="flex-1 items-center justify-center bg-black/50">
-        <View className="bg-white p-6 rounded-2xl w-11/12 gap-4">
-          <Text className="text-lg font-bold text-center">Enter Your Name</Text>
+        <View className="bg-cardBackground dark:bg-dark-cardBackground p-6 rounded-2xl w-11/12 gap-4">
+          <Text className="text-lg font-bold text-center text-text dark:text-dark-text">
+            Add extra details
+          </Text>
           <TextInput
-            className="border p-4 rounded"
+            className="border p-4 rounded-2xl  text-text border-borderColor dark:border-dark-borderColor dark:text-dark-text"
             placeholder="Field Name"
             value={fieldName}
             onChangeText={setFieldName}
+            placeholderTextColor={Colors[colorScheme ?? "light"].text}
           />
-          <View className="border rounded">
-            <Picker
-              selectedValue={fieldType}
-              onValueChange={(itemValue) => setFieldType(itemValue)}
-            >
-              <Picker.Item label="Text" value="text" />
-              <Picker.Item label="Number" value="number" />
-              <Picker.Item label="Link" value="link" />
-              <Picker.Item label="Image" value="image" />
-              <Picker.Item label="Date" value="date" />
-            </Picker>
-          </View>
+
+          <DropDown value={fieldType} setValue={setFieldType} />
 
           <Pressable onPress={handleFieldValuePress}>
             <TextInput
-              className="border p-4 rounded"
+              className="border p-4 rounded-2xl dark:text-dark-text text-text border-borderColor dark:border-dark-borderColor"
               placeholder="Field Value"
               value={fieldValue || undefined}
               onChangeText={setFieldValue}
               editable={fieldType !== "date"} // Disable manual editing for date
               pointerEvents={fieldType === "date" ? "none" : "auto"} // Properly handle click
+              placeholderTextColor={Colors[colorScheme ?? "light"].text}
             />
           </Pressable>
 

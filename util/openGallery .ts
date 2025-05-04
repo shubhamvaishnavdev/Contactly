@@ -1,7 +1,6 @@
 import { requestMediaLibraryPermission } from "./requestPermissions";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import { v4 as uuidv4 } from "uuid";
 import { Alert } from "react-native";
 
 export const openGallery = async (): Promise<{
@@ -12,14 +11,13 @@ export const openGallery = async (): Promise<{
   if (!hasPermission) return null;
 
   const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    mediaTypes: ["images"],
     allowsEditing: true,
     quality: 1,
   });
 
   if (!result.canceled) {
     const imageUri = result.assets[0].uri;
-    console.log("Selected image:", imageUri);
     // Proceed to save image or update state
     try {
       const contactlyDir = `${FileSystem.documentDirectory}Contactly/`;
@@ -34,7 +32,9 @@ export const openGallery = async (): Promise<{
 
       // Generate unique image name with extension
       const extension = imageUri.split(".").pop()?.split("?")[0] || "jpg";
-      const imageName = `${uuidv4()}.${extension}`;
+      const imageName = `${Date.now()}-${Math.random()
+        .toString(36)
+        .substring(2)}.${extension}`;
       const newPath = `${contactlyDir}${imageName}`;
 
       // Copy image to Contactly folder

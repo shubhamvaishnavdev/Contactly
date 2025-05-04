@@ -56,3 +56,35 @@ export const saveContactsToDb = async (contactList: SimplifiedContact[]) => {
     console.error("❌ Error syncing contacts to DB:", error);
   }
 };
+
+export const saveContactProfileImage = async ({
+  contactId,
+  imagePath,
+}: {
+  contactId: string;
+  imagePath: string;
+}) => {
+  const db = getDrizzleDb();
+
+  try {
+    // Check if contact exists
+    const existing = await db
+      .select()
+      .from(contacts)
+      .where(eq(contacts.id, contactId));
+
+    if (existing.length > 0) {
+      // Update the existing contact's profilePicture
+      await db
+        .update(contacts)
+        .set({ profilePicture: imagePath })
+        .where(eq(contacts.id, contactId));
+
+      console.log("✅ Profile image updated in contacts");
+    } else {
+      console.warn("⚠️ Contact not found, cannot update image");
+    }
+  } catch (error) {
+    console.error("❌ Error saving profile image to DB:", error);
+  }
+};

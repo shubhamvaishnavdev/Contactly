@@ -26,13 +26,14 @@ import { deleteCustomFieldFromDb } from "@/controllers/delete.controller";
 import CustomDeleteModal from "../common/deleteConfirmationModal";
 import { requestMediaLibraryPermission } from "@/util/requestPermissions";
 import { openGallery } from "@/util/openGallery ";
+import { saveContactProfileImage } from "@/controllers/insertContact.controller";
 
 const ShowContactDetails = ({
   basicDetails,
   customDetails,
   loadData,
 }: {
-  basicDetails: Contact | null;
+  basicDetails: Contact;
   customDetails: CustomContactDetails[] | [];
   loadData: any;
 }) => {
@@ -55,10 +56,6 @@ const ShowContactDetails = ({
     }
   };
 
-  const imageField = customDetails.find(
-    (f: CustomContactDetails) => f.fieldType === "image"
-  );
-
   const handleDelete = async ({
     customFieldId,
     contactId,
@@ -78,6 +75,11 @@ const ShowContactDetails = ({
     if (result) {
       const { imageName, imagePath } = result;
       console.log("Image saved:", imageName, imagePath);
+      await saveContactProfileImage({
+        contactId: basicDetails?.id,
+        imagePath: imagePath,
+      });
+      await loadData();
     }
   };
 
@@ -88,9 +90,9 @@ const ShowContactDetails = ({
     >
       {/* Profile Picture */}
       <Pressable className="items-center mb-4" onPress={handleProfilePicClick}>
-        {imageField?.fieldValue ? (
+        {basicDetails?.profilePicture ? (
           <Image
-            source={{ uri: imageField.fieldValue }}
+            source={{ uri: basicDetails?.profilePicture }}
             className="w-32 h-32 rounded-full border border-gray-300"
             resizeMode="cover"
           />

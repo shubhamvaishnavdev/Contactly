@@ -2,6 +2,7 @@ export interface Contact {
   id: string;
   name: string;
   phone: string;
+  profilePicture: string | null;
 }
 
 export type FieldType = "text" | "number" | "date" | "image" | "map" | "link";
@@ -21,9 +22,8 @@ export interface FullContact {
 }
 
 export interface EditContactData {
-    id: string;
-    fieldName: string;
-    fieldType: string;
-    fieldValue: string;
-  
+  id: string;
+  fieldName: string;
+  fieldType: string;
+  fieldValue: string;
 }

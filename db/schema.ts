@@ -13,6 +13,7 @@ export const contacts = sqliteTable("contacts", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   phone: text("phone").notNull(),
+  profilePicture: text("profile_picture"),
 });
 
 // Custom Fields Table

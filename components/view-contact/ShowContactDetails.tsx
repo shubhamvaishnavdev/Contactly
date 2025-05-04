@@ -33,7 +33,7 @@ const ShowContactDetails = ({
   customDetails,
   loadData,
 }: {
-  basicDetails: Contact;
+  basicDetails: Contact | null;
   customDetails: CustomContactDetails[] | [];
   loadData: any;
 }) => {
@@ -76,7 +76,7 @@ const ShowContactDetails = ({
       const { imageName, imagePath } = result;
       console.log("Image saved:", imageName, imagePath);
       await saveContactProfileImage({
-        contactId: basicDetails?.id,
+        contactId: basicDetails?.id ?? "",
         imagePath: imagePath,
       });
       await loadData();

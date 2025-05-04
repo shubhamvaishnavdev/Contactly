@@ -10,7 +10,12 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 
 const ViewContact = () => {
   const { contact_id } = useLocalSearchParams();
-  const [basicDetails, setBasicDetails] = useState<Contact | null>(null);
+  const [basicDetails, setBasicDetails] = useState<Contact>({
+    id: "",
+    name: "",
+    phone: "",
+    profilePicture: "",
+  });
   const [customDetails, setCustomDetails] = useState<CustomContactDetails[]>(
     []
   );
@@ -19,7 +24,7 @@ const ViewContact = () => {
   async function loadData() {
     if (contact_id) {
       const response = await fetchContactFromDb(String(contact_id));
-      setBasicDetails(response ? response.contact : null);
+      setBasicDetails(response ? response.contact : basicDetails);
       setCustomDetails(response ? response.customDetails : []);
     }
   }

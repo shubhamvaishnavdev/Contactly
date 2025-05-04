@@ -1,6 +1,7 @@
 import { getDrizzleDb } from "@/db/db";
 import { contacts } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
+import * as FileSystem from "expo-file-system";
 
 type SimplifiedContact = {
   id: string;
@@ -73,18 +74,33 @@ export const saveContactProfileImage = async ({
       .from(contacts)
       .where(eq(contacts.id, contactId));
 
-    if (existing.length > 0) {
-      // Update the existing contact's profilePicture
-      await db
-        .update(contacts)
-        .set({ profilePicture: imagePath })
-        .where(eq(contacts.id, contactId));
-
-      console.log("✅ Profile image updated in contacts");
-    } else {
-      console.warn("⚠️ Contact not found, cannot update image");
+      if (existing.length > 0) {
+        const previousImagePath = existing[0].profilePicture;
+  
+        // Delete the previous image from storage if it exists
+        if (previousImagePath && previousImagePath !== imagePath) {
+          try {
+            const fileInfo = await FileSystem.getInfoAsync(previousImagePath);
+            if (fileInfo.exists) {
+              await FileSystem.deleteAsync(previousImagePath, { idempotent: true });
+              console.log("🗑️ Deleted previous profile image");
+            }
+          } catch (deleteError) {
+            console.warn("⚠️ Failed to delete previous image:", deleteError);
+          }
+        }
+  
+        // Update the contact's profilePicture
+        await db
+          .update(contacts)
+          .set({ profilePicture: imagePath })
+          .where(eq(contacts.id, contactId));
+  
+        console.log("✅ Profile image updated in contacts");
+      } else {
+        console.warn("⚠️ Contact not found, cannot update image");
+      }
+    } catch (error) {
+      console.error("❌ Error saving profile image to DB:", error);
     }
-  } catch (error) {
-    console.error("❌ Error saving profile image to DB:", error);
-  }
 };

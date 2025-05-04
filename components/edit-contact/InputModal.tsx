@@ -7,12 +7,15 @@ import {
   Text,
   Pressable,
   Platform,
+  Image,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { saveCustomFieldsForContact } from "@/controllers/insertCustomFields.controller";
 import DropDown from "../common/DropDown";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { Colors } from "@/constants/Colors";
+import { openGallery } from "@/util/openGallery ";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 
 interface InputModalProps {
   visible: boolean;
@@ -45,19 +48,23 @@ const InputModal: React.FC<InputModalProps> = ({
     }
   };
 
-  const handleFieldValuePress = () => {
+  const handleFieldValuePress = async () => {
     if (fieldType === "date") {
       setShowDatePicker(true);
     }
   };
 
-  const handleSubmit = async () => {
-    console.log("Submitted Data:", {
-      fieldName,
-      fieldType,
-      fieldValue,
-    });
+  const handleImageSelection = async () => {
+    if (fieldType === "image") {
+      const result = await openGallery();
+      if (result) {
+        const { imageName, imagePath } = result;
+        setFieldValue(imagePath);
+      }
+    }
+  };
 
+  const handleSubmit = async () => {
     if (contact_id) {
       await saveCustomFieldsForContact(contact_id, {
         fieldName,
@@ -91,17 +98,38 @@ const InputModal: React.FC<InputModalProps> = ({
 
           <DropDown value={fieldType} setValue={setFieldType} />
 
-          <Pressable onPress={handleFieldValuePress}>
-            <TextInput
-              className="border p-4 rounded-2xl dark:text-dark-text text-text border-borderColor dark:border-dark-borderColor"
-              placeholder="Field Value"
-              value={fieldValue || undefined}
-              onChangeText={setFieldValue}
-              editable={fieldType !== "date"} // Disable manual editing for date
-              pointerEvents={fieldType === "date" ? "none" : "auto"} // Properly handle click
-              placeholderTextColor={Colors[colorScheme ?? "light"].text}
-            />
-          </Pressable>
+          {fieldType === "image" ? (
+            <Pressable
+              onPress={handleImageSelection}
+              className="border rounded-2xl border-borderColor dark:border-dark-borderColor p-2 h-36 flex justify-center items-center"
+            >
+              {fieldValue && fieldValue.trim() ? (
+                <Image
+                  source={{ uri: fieldValue }}
+                  className="w-24 h-24 rounded-2xl "
+                  resizeMode="cover"
+                />
+              ) : (
+                <EvilIcons
+                  name="image"
+                  size={84}
+                  color={Colors[colorScheme ?? "light"].text}
+                />
+              )}
+            </Pressable>
+          ) : (
+            <Pressable onPress={handleFieldValuePress}>
+              <TextInput
+                className="border p-4 rounded-2xl dark:text-dark-text text-text border-borderColor dark:border-dark-borderColor"
+                placeholder="Field Value"
+                value={fieldValue || undefined}
+                onChangeText={setFieldValue}
+                editable={fieldType !== "date"} // Disable manual editing for date
+                pointerEvents={fieldType === "date" ? "none" : "auto"} // Properly handle click
+                placeholderTextColor={Colors[colorScheme ?? "light"].text}
+              />
+            </Pressable>
+          )}
 
           {showDatePicker && (
             <DateTimePicker
@@ -112,6 +140,7 @@ const InputModal: React.FC<InputModalProps> = ({
             />
           )}
 
+          {/* save cancel buttons */}
           <View className="flex-row justify-between">
             <Pressable
               onPress={onClose}

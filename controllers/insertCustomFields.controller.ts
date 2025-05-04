@@ -1,5 +1,6 @@
 import { getDrizzleDb } from "@/db/db";
 import { customFields } from "@/db/schema";
+import { and, eq } from "drizzle-orm";
 
 interface NewCustomField {
   fieldName: string;
@@ -30,3 +31,5 @@ export async function saveCustomFieldsForContact(
     throw error;
   }
 }
+
+

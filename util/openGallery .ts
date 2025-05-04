@@ -43,7 +43,6 @@ export const openGallery = async (): Promise<{
         to: newPath,
       });
 
-      console.log("Saved image to:", newPath);
       return { imageName, imagePath: newPath };
     } catch (error) {
       console.error("Error saving image:", error);

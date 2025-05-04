@@ -116,13 +116,19 @@ const ShowContactDetails = ({
       {/* Custom Details */}
       <View className="space-y-3">
         {customDetails.map((field) => {
-          // Skip image field (already shown above)
-          if (field.fieldType === "image") return null;
-
           let content = null;
-
+          // Skip image field (already shown above)
+          if (field.fieldType === "image") {
+            content = (
+              <Image
+                source={{ uri: field.fieldValue ?? undefined }}
+                className="w-32 h-32 flex rounded-2xl justify-center items-center m-auto border border-gray-300"
+                resizeMode="cover"
+              />
+            );
+          }
           // Map or Location
-          if (field.fieldType === "map" && field.fieldObject) {
+          else if (field.fieldType === "map" && field.fieldObject) {
             const location = JSON.parse(field.fieldObject);
             content = (
               <Text className="text-text dark:text-dark-text">

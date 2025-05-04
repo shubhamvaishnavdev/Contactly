@@ -5,16 +5,24 @@ import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
 
 const ContactCard = ({ contact }: { contact: Contact }) => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <TouchableOpacity
       key={contact?.id}
       className="flex flex-row items-center rounded-full p-2"
-      onPress={()=>router.push(`/(contact)/view/${contact?.id}`)}
+      onPress={() => router.push(`/(contact)/view/${contact?.id}`)}
     >
       <View className="flex-row gap-4">
         <View className="bg-icon dark:bg-icon h-14 w-14 rounded-full flex justify-center items-center">
-          <Feather name="user" size={24} color="black" />
+          {contact?.profilePicture ? (
+            <Image
+              source={{ uri: contact?.profilePicture }}
+              className="w-full h-full rounded-full border border-gray-300"
+              resizeMode="cover"
+            />
+          ) : (
+            <Feather name="user" size={24} color="black" />
+          )}
         </View>
         <View className="justify-around">
           <Text className="text-text dark:text-dark-secondaryText text-lg font-bold">

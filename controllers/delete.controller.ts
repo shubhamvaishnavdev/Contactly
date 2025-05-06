@@ -7,7 +7,7 @@ export const deleteCustomFieldFromDb = async ({
   contactId, //id which is used to link custom field with contact
 }: {
   customFieldId: number;
-  contactId: number;
+  contactId: string;
 }): Promise<boolean> => {
   const db = getDrizzleDb();
 

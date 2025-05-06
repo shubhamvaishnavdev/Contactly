@@ -16,16 +16,23 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { updateCustomContactDetails } from "@/controllers/updateCustomFields.controller";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import DropDown from "../common/DropDown";
+import { useContactDetailsStore } from "@/store/useContactDetailsStore";
 
 type Props = {
   visible: boolean;
   onClose: () => void;
-  loadData: any;
+  contactId: string;
   initialData: CustomContactDetails;
 };
 
-const EditFieldModal = ({ visible, onClose, loadData, initialData }: Props) => {
+const EditFieldModal = ({
+  visible,
+  onClose,
+  contactId,
+  initialData,
+}: Props) => {
   const colorScheme = useColorScheme();
+  const { loadContactDetails } = useContactDetailsStore();
   const [fieldType, setFieldType] = useState<string>(initialData.fieldType);
   const [fieldName, setFieldName] = useState(initialData.fieldName);
   const [fieldValue, setFieldValue] = useState(initialData.fieldValue);
@@ -40,7 +47,7 @@ const EditFieldModal = ({ visible, onClose, loadData, initialData }: Props) => {
   };
 
   // Utility: Convert dd-mm-yyyy to Date object
-  const parseDateFromDDMMYYYY = (dateString: string) => {
+  const parseDateFromDDMMYYYY = (dateString: string | null | undefined) => {
     if (!dateString || !dateString.includes("/")) return new Date();
     const [day, month, year] = dateString.split("/");
     return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
@@ -67,7 +74,7 @@ const EditFieldModal = ({ visible, onClose, loadData, initialData }: Props) => {
 
     console.log("Updated field:", updatedField);
     await updateCustomContactDetails(updatedField);
-    await loadData();
+    await loadContactDetails(contactId);
     onClose();
   };
 

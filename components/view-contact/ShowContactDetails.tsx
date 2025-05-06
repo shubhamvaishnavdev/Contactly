@@ -27,25 +27,21 @@ import CustomDeleteModal from "../common/deleteConfirmationModal";
 import { requestMediaLibraryPermission } from "@/util/requestPermissions";
 import { openGallery } from "@/util/openGallery ";
 import { saveContactProfileImage } from "@/controllers/insertContact.controller";
+import { useContactDetailsStore } from "@/store/useContactDetailsStore";
+import { useContactListStore } from "@/store/useContactListStore";
 
-const ShowContactDetails = ({
-  basicDetails,
-  customDetails,
-  loadData,
-}: {
-  basicDetails: Contact | null;
-  customDetails: CustomContactDetails[] | [];
-  loadData: any;
-}) => {
+const ShowContactDetails = ({ contactId }: { contactId: string }) => {
   const colorScheme = useColorScheme();
-
+  const { basicDetails, customDetails, loadContactDetails } =
+    useContactDetailsStore();
+  const { loadContactList } = useContactListStore();
   const [editingField, setEditingField] = useState<null | CustomContactDetails>(
     null
   );
 
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [deleteField, setDeleteField] = useState({
-    contactId: 0,
+    contactId: "",
     customFieldId: 0,
   });
 
@@ -61,13 +57,13 @@ const ShowContactDetails = ({
     contactId,
   }: {
     customFieldId: number;
-    contactId: number;
+    contactId: string;
   }) => {
     await deleteCustomFieldFromDb({
       customFieldId,
-      contactId,
+      contactId: String(contactId),
     });
-    await loadData();
+    await loadContactDetails(contactId);
   };
 
   const handleProfilePicClick = async () => {
@@ -79,7 +75,8 @@ const ShowContactDetails = ({
         contactId: basicDetails?.id ?? "",
         imagePath: imagePath,
       });
-      await loadData();
+      await loadContactDetails(contactId);
+      await loadContactList();
     }
   };
 
@@ -199,7 +196,7 @@ const ShowContactDetails = ({
                     <MenuOption
                       onSelect={() => {
                         setDeleteField({
-                          contactId: Number(field.contactId),
+                          contactId: field.contactId,
                           customFieldId: Number(field.id),
                         });
                         setIsDeleteModalVisible(true);
@@ -221,7 +218,7 @@ const ShowContactDetails = ({
         <EditFieldModal
           visible={true}
           onClose={() => setEditingField(null)}
-          loadData={loadData}
+          contactId={contactId}
           initialData={editingField}
         />
       )}

@@ -16,22 +16,22 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { Colors } from "@/constants/Colors";
 import { openGallery } from "@/util/openGallery ";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import { useContactDetailsStore } from "@/store/useContactDetailsStore";
 
 interface InputModalProps {
   visible: boolean;
   onClose: () => void;
   contact_id: string;
-  loadData: any;
 }
 
 const InputModal: React.FC<InputModalProps> = ({
   visible,
   onClose,
   contact_id,
-  loadData,
 }) => {
   const colorScheme = useColorScheme();
-
+const { loadContactDetails } =
+    useContactDetailsStore();
   const [fieldName, setFieldName] = useState<string>("");
   const [fieldType, setFieldType] = useState<string>("text");
   const [fieldValue, setFieldValue] = useState<string>("");
@@ -72,7 +72,7 @@ const InputModal: React.FC<InputModalProps> = ({
         fieldValue,
       });
     }
-    await loadData();
+    await loadContactDetails(Number(contact_id));
     onClose(); // Close the modal after submission
   };
 

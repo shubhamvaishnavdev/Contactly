@@ -5,11 +5,15 @@ import ContactCard from "./contactCard";
 import { Contact } from "@/types/contact.types";
 import SearchBar from "./SearchBar";
 import FilterComponent from "./FilterComponent";
+import { useContactListStore } from "@/store/useContactListStore";
 
-const MainHomeComponent = ({ contactList }: { contactList: Contact[] }) => {
+const MainHomeComponent = () => {
+  const { contactList } = useContactListStore();
+
   const renderItem = ({ item }: { item: Contact }) => (
     <ContactCard contact={item} />
   );
+
   return (
     <View className=" h-full w-full">
       <SearchBar />

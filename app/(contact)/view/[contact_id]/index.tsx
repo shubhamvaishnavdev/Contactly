@@ -7,29 +7,19 @@ import { useLocalSearchParams } from "expo-router";
 import { fetchContactFromDb } from "@/controllers/fetchContact.controller";
 import InputModal from "@/components/edit-contact/InputModal";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useContactDetailsStore } from "@/store/useContactDetailsStore";
 
 const ViewContact = () => {
   const { contact_id } = useLocalSearchParams();
-  const [basicDetails, setBasicDetails] = useState<Contact>({
-    id: "",
-    name: "",
-    phone: "",
-    profilePicture: "",
-  });
-  const [customDetails, setCustomDetails] = useState<CustomContactDetails[]>(
-    []
-  );
+  const contactId = Array.isArray(contact_id) ? contact_id[0] : contact_id;
+
+  const { loadContactDetails } =
+    useContactDetailsStore();
+
   const [modalVisible, setModalVisible] = useState(false);
 
-  async function loadData() {
-    if (contact_id) {
-      const response = await fetchContactFromDb(String(contact_id));
-      setBasicDetails(response ? response.contact : basicDetails);
-      setCustomDetails(response ? response.customDetails : []);
-    }
-  }
   useEffect(() => {
-    loadData();
+    loadContactDetails(contactId);
   }, []);
 
   // const basicDetails = {
@@ -150,9 +140,7 @@ const ViewContact = () => {
   return (
     <View className="relative min-h-full w-full bg-background dark:bg-dark-background ">
       <ShowContactDetails
-        basicDetails={basicDetails}
-        customDetails={customDetails}
-        loadData={loadData}
+        contactId={contactId}
       />
       <Pressable
         onPress={() => setModalVisible(true)}
@@ -164,7 +152,6 @@ const ViewContact = () => {
         <InputModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
-          loadData={loadData}
           contact_id={String(contact_id)}
         />
       )}

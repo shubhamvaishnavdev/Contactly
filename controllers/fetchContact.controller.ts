@@ -44,10 +44,10 @@ export const fetchContactFromDb = async (
 
     if (!contact) return null;
 
-    const customDetails = await db
+    const customDetails = (await db
       .select()
       .from(customFields)
-      .where(eq(customFields.contactId, contactId)) as CustomContactDetails[];
+      .where(eq(customFields.contactId, contactId))) as CustomContactDetails[];
 
     return {
       contact,
@@ -58,4 +58,3 @@ export const fetchContactFromDb = async (
     return null; // changed from [] to null
   }
 };
-

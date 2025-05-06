@@ -30,8 +30,7 @@ const InputModal: React.FC<InputModalProps> = ({
   contact_id,
 }) => {
   const colorScheme = useColorScheme();
-const { loadContactDetails } =
-    useContactDetailsStore();
+  const { loadContactDetails } = useContactDetailsStore();
   const [fieldName, setFieldName] = useState<string>("");
   const [fieldType, setFieldType] = useState<string>("text");
   const [fieldValue, setFieldValue] = useState<string>("");
@@ -72,7 +71,7 @@ const { loadContactDetails } =
         fieldValue,
       });
     }
-    await loadContactDetails(Number(contact_id));
+    await loadContactDetails(contact_id);
     onClose(); // Close the modal after submission
   };
 
@@ -144,15 +143,17 @@ const { loadContactDetails } =
           <View className="flex-row justify-between">
             <Pressable
               onPress={onClose}
-              className="px-4 py-2 bg-gray-300 rounded-xl"
+              className="px-4 py-2  rounded-xl border border-borderColor dark:border-dark-borderColor"
             >
-              <Text>Cancel</Text>
+              <Text className="text-text dark:text-dark-text">Cancel</Text>
             </Pressable>
             <Pressable
               onPress={handleSubmit}
-              className="px-4 py-2 bg-blue-500 rounded-xl"
+              className="px-4 py-2 rounded-xl bg-primaryBtnBackground dark:bg-dark-primaryBtnBackground"
             >
-              <Text className="text-white">Submit</Text>
+              <Text className="text-primaryBtnText dark:text-dark-primaryBtnText">
+                Submit
+              </Text>
             </Pressable>
           </View>
         </View>

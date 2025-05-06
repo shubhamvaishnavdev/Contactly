@@ -8,13 +8,16 @@ import { fetchContactFromDb } from "@/controllers/fetchContact.controller";
 import InputModal from "@/components/edit-contact/InputModal";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useContactDetailsStore } from "@/store/useContactDetailsStore";
+import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { Colors } from "@/constants/Colors";
 
 const ViewContact = () => {
   const { contact_id } = useLocalSearchParams();
+  const colorScheme = useColorScheme();
+
   const contactId = Array.isArray(contact_id) ? contact_id[0] : contact_id;
 
-  const { loadContactDetails } =
-    useContactDetailsStore();
+  const { loadContactDetails } = useContactDetailsStore();
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -139,14 +142,16 @@ const ViewContact = () => {
 
   return (
     <View className="relative min-h-full w-full bg-background dark:bg-dark-background ">
-      <ShowContactDetails
-        contactId={contactId}
-      />
+      <ShowContactDetails contactId={contactId} />
       <Pressable
         onPress={() => setModalVisible(true)}
-        className="bg-blue-600 p-3 rounded-full absolute bottom-20 right-8"
+        className="bg-primaryBtnBackground dark:bg-dark-primaryBtnBackground p-3 rounded-full absolute bottom-20 right-8"
       >
-        <AntDesign name="plus" size={24} color="white" />
+        <AntDesign
+          name="plus"
+          size={24}
+          color={Colors[colorScheme ?? "light"].primaryBtnText}
+        />
       </Pressable>
       {modalVisible && (
         <InputModal

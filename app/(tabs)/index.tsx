@@ -5,12 +5,14 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MainHomeComponent from "@/components/home/MainHomeComponent";
 import { useContactListStore } from "@/store/useContactListStore";
+import { useSearchContactStore } from "@/store/useSearchContactsStore";
 
 export default function HomeScreen() {
   // const [contactList, setContactList] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(false);
   const { contactList, loadContactList, isContactListLoading } =
     useContactListStore();
+  const { searchTerm } = useSearchContactStore();
 
   useEffect(() => {
     loadContactList();
@@ -37,7 +39,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView edges={["top", "bottom", "left", "right"]}>
       <View className="h-full w-full flex justify-center items-center bg-background dark:bg-dark-background p-4 pb-0 rounded-xl">
-        {contactList.length > 0 ? (
+        {contactList.length > 0 || searchTerm ? (
           <MainHomeComponent />
         ) : (
           <TouchableOpacity

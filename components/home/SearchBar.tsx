@@ -6,11 +6,13 @@ import { useColorScheme } from "@/hooks/useColorScheme.web";
 import Feather from "@expo/vector-icons/Feather";
 import { searchContacts } from "@/controllers/search.controller";
 import { useContactListStore } from "@/store/useContactListStore";
+import { useSearchContactStore } from "@/store/useSearchContactsStore";
 
 const SearchBar = () => {
   const colorScheme = useColorScheme();
   const { setContactList, loadContactList } = useContactListStore();
-  const [searchTerm, setSearchTerm] = useState("");
+  const { setSearchTerm } = useSearchContactStore();
+  const [searchedTerm, setSearchedTerm] = useState("");
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -18,9 +20,10 @@ const SearchBar = () => {
       clearTimeout(debounceTimeout.current);
     }
 
-    if (searchTerm.trim().length >= 3) {
+    if (searchedTerm.trim().length >= 3) {
       debounceTimeout.current = setTimeout(() => {
-        handleSearch(searchTerm.trim());
+        setSearchTerm(searchedTerm.trim());
+        handleSearch(searchedTerm.trim());
       }, 400);
     } else {
       loadContactList();
@@ -29,7 +32,7 @@ const SearchBar = () => {
     return () => {
       if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
     };
-  }, [searchTerm]);
+  }, [searchedTerm]);
 
   const handleSearch = async (query: string) => {
     try {
@@ -50,8 +53,8 @@ const SearchBar = () => {
       <TextInput
         placeholder="Search..."
         className="h-auto w-[75%] text-text dark:text-dark-text"
-        onChangeText={(text) => setSearchTerm(text)}
-        value={searchTerm}
+        onChangeText={(text) => setSearchedTerm(text)}
+        value={searchedTerm}
         placeholderTextColor={Colors[colorScheme ?? "light"].placeholderText}
       />
       <Feather
